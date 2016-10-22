@@ -343,6 +343,40 @@ def fingerSearch():
             print ("Unknown fingerSearch error")
             return False    
 
+
+#Fingerprint search that returns ID as string
+def fingerSearchID():
+	rxPacket = bytearray()
+	packet = bytearray([
+		FPSconstants.FINGERPRINT_SEARCH, 
+		0x01, 
+		0x00, 
+		0x00
+	])
+
+	writePacket(theAddress, FPSconstants.FINGERPRINT_COMMANDPACKET, (len(packet)+2), packet)
+	rxPacket = receivePacket(16)
+
+	rxLength = (rxPacket[8]) - 2
+	
+	if((rxLength == 5) and (str(rxPacket[6]) == '7')):
+		#print ("Receive packet acknowledged")
+		if(str(rxPacket[9]) == '0'):
+			print ("Page ID:" + str(rxPacket[10]) + str(rxPacket[11]))
+			print ("Match score:" + str(rxPacket[12]) + str(rxPacket[13]))
+			fingerIDstring = (str(rxPacket[10]) + str(rxPacket[11]))
+			return True, fingerIDstring
+		elif(str(rxPacket[9]) == '1'):
+			print ("Error receiving packet")
+			return False
+		elif(str(rxPacket[9]) == '9'):
+			print ("No matching finger in the library")
+			return False
+		else:
+			print ("Unknown fingerSearch error")
+			return False
+		
+		
 #Get the template count of the Fingerprint sensor
 def getTemplateCount():
     templateCount = 0

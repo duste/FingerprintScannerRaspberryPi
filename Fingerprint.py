@@ -317,9 +317,9 @@ def fingerSearch():
     rxPacket = bytearray()
     packet = bytearray([
     FPSconstants.FINGERPRINT_SEARCH, 
-    0x01, 
-    0x00, 
-    0x00
+    0x01,  # buffer id
+    0x00, 0x00,  # start page
+    0x03, 0xe8  # page num (1000)
     ])
 
     writePacket(theAddress, FPSconstants.FINGERPRINT_COMMANDPACKET, (len(packet)+2), packet)
